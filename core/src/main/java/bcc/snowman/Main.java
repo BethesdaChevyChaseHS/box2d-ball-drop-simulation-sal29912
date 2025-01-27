@@ -44,8 +44,8 @@ public class Main extends ApplicationAdapter {
     private final float SPACING_X = TOTAL_WIDTH / (ROW_NUM - 1 + BALLS_IN_FIRST_ROW - 1);
     private final float SPACING_Y = PEG_AREA_HEIGHT / (ROW_NUM - 1);
     private final float BALL_SIZE = SPACING_Y/5;
-    private final float BOUNCINESS = .05f;
-    private final float GRAVITY = 10f;
+    private final float BOUNCINESS = .5f;
+    private final float GRAVITY = 100f;
 
     public void create() {
         world = new World(new Vector2(0, -GRAVITY), true);
@@ -93,9 +93,9 @@ public class Main extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
-        world.step(1 / 60f, 6, 2);
+        world.step(1 / 10f, 60, 20);
         frameCount++;
-        if(frameCount % 60 == 0)dropBall();
+        dropBall();
 
         camera.update();
 
@@ -137,10 +137,18 @@ public class Main extends ApplicationAdapter {
 
     //FOR YOU TO IMPLEMENT
     private void addAllPegs() {
-        //sample addPeg call
         addPeg(PEG_CENTER_X, PEG_AREA_START, BALL_SIZE);
 
-        // PLEASE USE LOOPS, DON'T MANUALLY PLACE EACH PEG
+        for (int i = 0; i < ROW_NUM; i++) {
+            float y = PEG_AREA_START - i * SPACING_Y;
+            int pegsInARow = BALLS_IN_FIRST_ROW + i;
+            float startX = PEG_CENTER_X - (pegsInARow - 1) * SPACING_X / 2;
+    
+            for (int j = 0; j < pegsInARow; j++) {
+                float x = startX + j * SPACING_X;
+                addPeg(x, y, BALL_SIZE);
+            }
+        }
     }
 
     private void addPeg(float x, float y, float radius) {
